@@ -1,18 +1,22 @@
 'use client';
 
+import type { RefObject } from 'react';
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import { FocusScope } from '@react-aria/focus';
 import { Toast } from '@base-ui/react/toast';
-import { useHotkey } from '@tanstack/react-hotkeys';
 import { SearchBox, toastManager } from '@/components/search-box';
 import { cn } from '@/lib/utils';
 
-export const searchDialogHandle = DialogPrimitive.createHandle();
+export const searchDialogHandle = DialogPrimitive.createHandle<null>();
 
-function DialogSearchBox() {
+function DialogSearchBox({
+  onValidSubmit,
+}: {
+  onValidSubmit: () => void;
+}) {
   return (
     <Toast.Provider toastManager={toastManager} limit={1}>
-      <SearchBox.Provider onValidSubmit={() => searchDialogHandle.close()}>
+      <SearchBox.Provider onValidSubmit={onValidSubmit}>
         <SearchBox.Inner />
         <SearchBox.Toasts />
       </SearchBox.Provider>
@@ -20,18 +24,22 @@ function DialogSearchBox() {
   );
 }
 
-export function SearchDialog() {
-  useHotkey('Mod+K', () => {
-    if (searchDialogHandle.isOpen) {
-      searchDialogHandle.close();
-      return;
-    }
-
-    searchDialogHandle.open(null);
-  });
-
+export function SearchDialog({
+  open,
+  onOpenChange,
+  actionsRef,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  actionsRef?: RefObject<DialogPrimitive.Root.Actions | null>;
+}) {
   return (
-    <DialogPrimitive.Root handle={searchDialogHandle}>
+    <DialogPrimitive.Root
+      open={open}
+      onOpenChange={onOpenChange}
+      actionsRef={actionsRef}
+      handle={searchDialogHandle}
+    >
       <DialogPrimitive.Portal>
         <DialogPrimitive.Backdrop className="fixed inset-0 isolate z-50" />
         {/* Base UI restores focus to the detached trigger on close.
@@ -46,7 +54,7 @@ export function SearchDialog() {
           )}
         >
           <FocusScope restoreFocus>
-            <DialogSearchBox />
+            <DialogSearchBox onValidSubmit={() => onOpenChange(false)} />
           </FocusScope>
         </DialogPrimitive.Popup>
       </DialogPrimitive.Portal>
