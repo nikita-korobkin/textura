@@ -301,7 +301,6 @@ function SearchBoxProvider({
 
         if (pathname === targetPath) {
           inputRef.current?.blur();
-          reset();
           return;
         }
 
