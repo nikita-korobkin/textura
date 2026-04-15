@@ -28,7 +28,6 @@ import {
   InputGroupButton,
 } from '@/components/ui/input-group';
 import { dictionaryPath } from '@/lib/dictionary/routes';
-import { getTRPCClient } from '@/trpc/client';
 
 const toastManager = Toast.createToastManager();
 
@@ -288,27 +287,39 @@ function SearchBoxProvider({
     dispatch({ type: 'submitted' });
 
     try {
-      const result = await getTRPCClient().search.validateQuery.mutate(
-        { query: submittedQuery },
-        { signal: controller.signal },
-      );
+      const response = await fetch('/api/headwords/validate', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: submittedQuery,
+          variety: 'en-US',
+        }),
+        signal: controller.signal,
+      });
 
       if (controller.signal.aborted) return;
 
-      if (result.valid) {
-        onValidSubmit?.();
-        const targetPath = dictionaryPath(result.query);
-
-        if (pathname === targetPath) {
-          inputRef.current?.blur();
-          return;
-        }
-
-        dispatch({ type: 'navigationStarted' });
-        router.push(targetPath);
-      } else {
+      if (response.status === 422) {
         dispatch({ type: 'validationFailed', query: submittedQuery });
+        return;
       }
+
+      if (!response.ok) {
+        throw new Error(`Validation failed with status ${response.status}`);
+      }
+
+      onValidSubmit?.();
+      const targetPath = dictionaryPath(submittedQuery);
+
+      if (pathname === targetPath) {
+        inputRef.current?.blur();
+        return;
+      }
+
+      dispatch({ type: 'navigationStarted' });
+      router.push(targetPath);
     } catch (err) {
       if (controller.signal.aborted) return;
       dispatch({ type: 'validationErrored' });
