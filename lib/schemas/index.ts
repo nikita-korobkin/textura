@@ -9,5 +9,9 @@ export {
   type Etymon,
 } from './etymon';
 export { ArticleSchema, type Article } from './article';
-export { QueryValidationResultSchema } from './validation';
 export { VarietySchema, slugToVariety, type Variety } from './variety';
+export {
+  HeadwordSchema,
+  HeadwordSupportSchema,
+  type Headword,
+} from './headword';

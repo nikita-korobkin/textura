@@ -28,6 +28,7 @@ import {
   InputGroupButton,
 } from '@/components/ui/input-group';
 import { dictionaryPath } from '@/lib/dictionary/routes';
+import { HeadwordSchema } from '@/lib/schemas';
 
 const toastManager = Toast.createToastManager();
 
@@ -257,7 +258,6 @@ function SearchBoxProvider({
   const inputRef = useRef<HTMLInputElement>(null);
   const groupRef = useRef<HTMLDivElement>(null);
 
-  const trimmedQuery = state.query.trim();
   const busy = state.status === 'validating' || state.status === 'navigating';
   const invalid = state.invalidFor !== null;
 
@@ -278,8 +278,15 @@ function SearchBoxProvider({
   }, [reset]);
 
   async function submit() {
-    const submittedQuery = trimmedQuery;
-    if (!submittedQuery || busy || invalid) return;
+    const parsed = HeadwordSchema.safeParse({
+      form: state.query,
+      variety: 'en-US',
+    });
+    if (!parsed.success) {
+      dispatch({ type: 'validationFailed', query: state.query });
+      return;
+    }
+    const headword = parsed.data;
 
     abortRef.current?.abort();
     const controller = new AbortController();
@@ -292,17 +299,14 @@ function SearchBoxProvider({
         headers: {
           'content-type': 'application/json',
         },
-        body: JSON.stringify({
-          query: submittedQuery,
-          variety: 'en-US',
-        }),
+        body: JSON.stringify(headword),
         signal: controller.signal,
       });
 
       if (controller.signal.aborted) return;
 
       if (response.status === 422) {
-        dispatch({ type: 'validationFailed', query: submittedQuery });
+        dispatch({ type: 'validationFailed', query: headword.form });
         return;
       }
 
@@ -311,7 +315,7 @@ function SearchBoxProvider({
       }
 
       onValidSubmit?.();
-      const targetPath = dictionaryPath(submittedQuery, 'en-US');
+      const targetPath = dictionaryPath(headword);
 
       if (pathname === targetPath) {
         inputRef.current?.blur();

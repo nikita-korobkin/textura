@@ -1,12 +1,15 @@
-import { validateQuery } from '@/lib/validation';
+import { HeadwordSchema } from '@/lib/schemas';
+import { isHeadwordSupported } from '@/lib/headwords';
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  const result = await validateQuery(body.query, body.variety);
-
-  if (!result.valid) {
-    return Response.json({ valid: false }, { status: 422 });
+  const parsed = HeadwordSchema.safeParse(await request.json());
+  if (!parsed.success) {
+    return new Response(null, { status: 422 });
   }
 
-  return Response.json({ valid: true });
+  if (!(await isHeadwordSupported(parsed.data))) {
+    return new Response(null, { status: 422 });
+  }
+
+  return Response.json(parsed.data);
 }
