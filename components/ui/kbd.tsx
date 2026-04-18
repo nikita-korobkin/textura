@@ -2,7 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const kbdVariants = cva(
-  'pointer-events-none inline-flex w-fit items-center justify-center font-sans leading-none font-normal text-muted-foreground select-none in-data-[slot=tooltip-content]:text-tooltip-muted-foreground',
+  'pointer-events-none inline-flex w-fit items-center justify-center font-sans leading-none font-normal text-muted-foreground select-none',
   {
     variants: {
       size: {

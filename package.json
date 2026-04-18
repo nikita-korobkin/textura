@@ -18,7 +18,7 @@
     "@base-ui/react": "^1.2.0",
     "@neondatabase/serverless": "^1.0.2",
     "@react-aria/focus": "3.21.5",
-    "@tanstack/react-hotkeys": "^0.4.0",
+    "@tanstack/react-hotkeys": "^0.9.1",
     "ai": "^6.0.103",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

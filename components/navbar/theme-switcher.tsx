@@ -10,7 +10,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { NavbarButton } from '@/components/navbar/navbar-button';
+import { Navbar } from '@/components/navbar/navbar';
 
 export default function ThemeSwitcher() {
   const { theme, resolvedTheme, setTheme } = useTheme();
@@ -19,13 +19,13 @@ export default function ThemeSwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <NavbarButton aria-label="Change theme">
+          <Navbar.Button aria-label="Change theme">
             {resolvedTheme === 'dark' ? (
               <Moon aria-hidden="true" />
             ) : (
               <Sun aria-hidden="true" />
             )}
-          </NavbarButton>
+          </Navbar.Button>
         }
       />
       <DropdownMenuContent align="end">

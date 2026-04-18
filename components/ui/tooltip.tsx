@@ -1,7 +1,8 @@
 'use client';
 
 import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
-
+import { formatForDisplay, type Hotkey } from '@tanstack/react-hotkeys';
+import { Kbd } from './kbd';
 import { cn } from '@/lib/utils';
 
 function TooltipProvider({
@@ -31,6 +32,17 @@ function TooltipTrigger({ ...props }: TooltipPrimitive.Trigger.Props) {
   return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
 }
 
+function TooltipShortcut({
+  hotkey,
+  ...props
+}: React.ComponentProps<typeof Kbd> & { hotkey: Hotkey }) {
+  return (
+    <Kbd data-slot="tooltip-shortcut" {...props}>
+      {formatForDisplay(hotkey, { separatorToken: '' })}
+    </Kbd>
+  );
+}
+
 function TooltipContent({
   className,
   side = 'top',
@@ -56,7 +68,7 @@ function TooltipContent({
         <TooltipPrimitive.Popup
           data-slot="tooltip-content"
           className={cn(
-            'z-50 inline-flex w-fit max-w-xs items-center gap-1 rounded-sm bg-tooltip px-2 py-1 text-xs font-medium text-tooltip-foreground',
+            'z-50 inline-flex w-fit max-w-xs items-center gap-1 rounded-sm bg-tooltip px-2 py-1 text-xs font-medium text-tooltip-foreground *:data-[slot=tooltip-shortcut]:text-tooltip-muted-foreground',
             className,
           )}
           {...props}
@@ -68,4 +80,10 @@ function TooltipContent({
   );
 }
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
+export {
+  Tooltip,
+  TooltipTrigger,
+  TooltipShortcut,
+  TooltipContent,
+  TooltipProvider,
+};
