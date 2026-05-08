@@ -129,7 +129,10 @@ function SearchDialogContent() {
   } = useSearchDialog();
 
   return (
-    <DialogContent className="top-1/4" variants={searchDialogVariants}>
+    <DialogContent
+      className="top-1/4 origin-bottom"
+      variants={searchDialogVariants}
+    >
       <SearchBox onValidSubmit={() => setOpen(false)} />
     </DialogContent>
   );
