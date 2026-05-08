@@ -277,7 +277,7 @@ function SearchBoxGroup({ children }: { children: ReactNode }) {
     <InputGroup
       ref={groupRef}
       size="lg"
-      className="border-0 bg-card shadow-searchbox"
+      className="border-0 bg-card shadow-searchbox in-data-[slot=dialog-content]:shadow-searchbox-dialog"
     >
       {children}
     </InputGroup>

@@ -38,6 +38,9 @@
   --shadow-md:
     0px 2px 4px 0px oklch(24.3% 0.008 95.4 / 5%),
     0px 6px 16px 0px oklch(24.3% 0.008 95.4 / 5%);
+  --shadow-lg:
+    0px 4px 8px 0px oklch(24.3% 0.008 95.4 / 5%),
+    0px 12px 32px 0px oklch(24.3% 0.008 95.4 / 6%);
 
   --tooltip: var(--foreground);
   --tooltip-foreground: oklch(99.4% 0.001 106.4);
@@ -48,6 +51,7 @@
   --toast-shadow: var(--shadow-xs), var(--hairline);
 
   --searchbox-shadow: var(--shadow-xs), var(--hairline);
+  --searchbox-dialog-shadow: var(--shadow-lg), var(--hairline);
 }
 
 .dark {
@@ -67,6 +71,8 @@
   --shadow-xs: 0px 3px 6px 0px oklch(0% 0 0 / 6%);
   --shadow-md:
     0px 2px 4px 0px oklch(0% 0 0 / 10%), 0px 6px 16px 0px oklch(0% 0 0 / 12%);
+  --shadow-lg:
+    0px 4px 8px 0px oklch(0% 0 0 / 8%), 0px 12px 32px 0px oklch(0% 0 0 / 10%);
 
   --tooltip: oklch(17.8% 0 0);
   --tooltip-foreground: var(--foreground);
@@ -107,6 +113,7 @@
 
   --shadow-xs: var(--shadow-xs);
   --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
 
   --color-selection: var(--selection);
   --color-selection-foreground: var(--selection-foreground);
@@ -120,6 +127,7 @@
   --shadow-toast: var(--toast-shadow);
 
   --shadow-searchbox: var(--searchbox-shadow);
+  --shadow-searchbox-dialog: var(--searchbox-dialog-shadow);
 }
 
 @counter-style bare-decimal {
