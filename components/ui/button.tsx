@@ -14,7 +14,7 @@ const buttonVariants = cva(
           'bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-primary/80 dark:hover:bg-primary/90',
         ghost:
           'text-foreground hover:bg-accent dark:text-subtle-foreground dark:hover:text-foreground',
-        outline: 'bg-popover text-foreground shadow-popover',
+        outline: 'bg-popover text-foreground shadow-md ring ring-border',
       },
       size: {
         icon: "size-9 p-0 has-[>svg]:p-0 [&>svg:not([class*='size-'])]:size-5",

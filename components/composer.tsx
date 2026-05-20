@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils';
 function Composer({ children, className, ...props }: ComponentProps<'form'>) {
   return (
     <form className={cn('flex w-full flex-col gap-2', className)} {...props}>
-      <InputGroup className="h-14 rounded-2xl border-0 bg-card shadow-composer *:data-[slot=input-group-control]:pr-3 *:data-[slot=input-group-control]:pl-4">
+      <InputGroup className="h-14 rounded-2xl bg-card shadow-xs ring-border *:data-[slot=input-group-control]:pr-3 *:data-[slot=input-group-control]:pl-4">
         {children}
       </InputGroup>
     </form>

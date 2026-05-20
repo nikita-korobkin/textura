@@ -11,7 +11,7 @@ export default function ChatLayout({
 }) {
   return (
     <>
-      <Navbar>
+      <Navbar className="border-b border-separator bg-background lg:border-b-0 lg:bg-transparent">
         <Navbar.Start>
           <HomeLink />
         </Navbar.Start>

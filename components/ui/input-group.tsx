@@ -13,7 +13,7 @@ function InputGroup({ className, ...props }: React.ComponentProps<'div'>) {
       data-slot="input-group"
       role="group"
       className={cn(
-        'flex w-full min-w-0 items-center border-[0.5px] border-input',
+        'flex w-full min-w-0 items-center ring ring-input',
         className,
       )}
       {...props}
