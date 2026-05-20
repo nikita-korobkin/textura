@@ -1,6 +1,8 @@
-import type { ComponentProps } from 'react';
-import { StickToBottom } from 'use-stick-to-bottom';
+import { useCallback, type ComponentProps } from 'react';
+import { ArrowDownIcon } from 'lucide-react';
+import { StickToBottom, useStickToBottomContext } from 'use-stick-to-bottom';
 
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 export type ConversationProps = ComponentProps<typeof StickToBottom>;
@@ -30,5 +32,37 @@ export function ConversationContent({
       className={cn('flex flex-col', className)}
       {...props}
     />
+  );
+}
+
+export type ConversationScrollButtonProps = ComponentProps<typeof Button>;
+
+export function ConversationScrollButton({
+  className,
+  ...props
+}: ConversationScrollButtonProps) {
+  const { isAtBottom, scrollToBottom } = useStickToBottomContext();
+
+  const handleScrollToBottom = useCallback(() => {
+    scrollToBottom();
+  }, [scrollToBottom]);
+
+  return (
+    !isAtBottom && (
+      <Button
+        aria-label="Scroll to bottom"
+        className={cn(
+          'absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full text-subtle-foreground',
+          className,
+        )}
+        onClick={handleScrollToBottom}
+        size="icon"
+        type="button"
+        variant="outline"
+        {...props}
+      >
+        <ArrowDownIcon />
+      </Button>
+    )
   );
 }

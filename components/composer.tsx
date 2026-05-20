@@ -13,14 +13,10 @@ import {
 } from '@/components/ui/input-group';
 import { cn } from '@/lib/utils';
 
-function Composer({
-  children,
-  className,
-  ...props
-}: ComponentProps<'form'>) {
+function Composer({ children, className, ...props }: ComponentProps<'form'>) {
   return (
     <form className={cn('flex w-full flex-col gap-2', className)} {...props}>
-      <InputGroup className="h-14 rounded-2xl border-0 bg-card shadow-composer [&>[data-slot=input-group-control]]:pl-4 [&>[data-slot=input-group-control]]:pr-3">
+      <InputGroup className="h-14 rounded-2xl border-0 bg-card shadow-composer *:data-[slot=input-group-control]:pr-3 *:data-[slot=input-group-control]:pl-4">
         {children}
       </InputGroup>
     </form>
@@ -33,17 +29,14 @@ function ComposerInput(props: ComponentProps<'input'>) {
 
 function ComposerAddon({ children }: { children: ReactNode }) {
   return (
-    <InputGroupAddon
-      align="inline-end"
-      className="pr-2"
-    >
+    <InputGroupAddon align="inline-end" className="pr-2">
       {children}
     </InputGroupAddon>
   );
 }
 
 function ComposerSubmit(props: PromptInputSubmitProps) {
-  return <PromptInputSubmit size="icon-lg" {...props} />;
+  return <PromptInputSubmit size="icon-lg" className="rounded-lg" {...props} />;
 }
 
 export { Composer, ComposerAddon, ComposerInput, ComposerSubmit };

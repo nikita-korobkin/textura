@@ -7,6 +7,7 @@ import { useEffect, useRef, useState, type SubmitEvent } from 'react';
 import {
   Conversation,
   ConversationContent,
+  ConversationScrollButton,
 } from '@/components/ai-elements/conversation';
 import {
   Message,
@@ -66,6 +67,7 @@ function Chat() {
             </Message>
           ))}
         </ConversationContent>
+        <ConversationScrollButton />
       </Conversation>
 
       <div className="shrink-0 bg-background">
