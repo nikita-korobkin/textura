@@ -1,10 +1,10 @@
 'use client';
 
+import { HomeLink } from '@/components/navbar/home-link';
 import { Navbar } from '@/components/navbar/navbar';
 import ThemeSwitcher from '@/components/navbar/theme-switcher';
-import { HomeLink } from '@/components/navbar/home-link';
 
-export default function DictionaryLayout({
+export default function ChatLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -19,7 +19,7 @@ export default function DictionaryLayout({
           <ThemeSwitcher />
         </Navbar.End>
       </Navbar>
-      <main className="pt-24 pb-16">{children}</main>
+      <main className="h-dvh">{children}</main>
     </>
   );
 }

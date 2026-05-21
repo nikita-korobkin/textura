@@ -15,7 +15,7 @@ export function Navbar({
       <header
         data-slot="navbar"
         className={cn(
-          'fixed inset-x-0 top-0 grid h-14 grid-cols-[1fr_1fr] items-center px-2 *:gap-1',
+          'fixed inset-x-0 top-0 z-10 grid h-14 grid-cols-[1fr_1fr] items-center px-2 *:gap-1',
           className,
         )}
         {...props}

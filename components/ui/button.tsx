@@ -6,7 +6,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'flex items-center justify-center border border-transparent bg-clip-padding transition-all will-change-[opacity] select-none disabled:pointer-events-none disabled:opacity-50 aria-invalid:outline-destructive [&_svg]:pointer-events-none',
+  'flex items-center justify-center bg-clip-padding transition-all will-change-[opacity] select-none disabled:pointer-events-none disabled:opacity-50 aria-invalid:outline-destructive [&_svg]:pointer-events-none [&_svg]:stroke-[1.75]',
   {
     variants: {
       variant: {
@@ -14,10 +14,12 @@ const buttonVariants = cva(
           'bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-primary/80 dark:hover:bg-primary/90',
         ghost:
           'text-foreground hover:bg-accent dark:text-subtle-foreground dark:hover:text-foreground',
+        outline: 'bg-popover text-foreground shadow-md ring ring-border',
       },
       size: {
+        icon: "size-9 p-0 has-[>svg]:p-0 [&>svg:not([class*='size-'])]:size-5",
         'icon-lg':
-          "size-10 rounded-lg p-0 has-[>svg]:p-0 [&>svg:not([class*='size-'])]:size-5",
+          "size-10 p-0 has-[>svg]:p-0 [&>svg:not([class*='size-'])]:size-5.5",
       },
     },
   },

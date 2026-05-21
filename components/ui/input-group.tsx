@@ -7,28 +7,15 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-const inputGroupVariants = cva(
-  'flex w-full min-w-0 items-center border-[0.5px] border-input',
-  {
-    variants: {
-      size: {
-        lg: 'h-14 w-lg rounded-2xl [&>input]:px-4 has-[>[data-align=inline-end]]:[&>input]:pr-3 has-[>[data-align=inline-start]]:[&>input]:pl-3',
-      },
-    },
-  },
-);
-
-function InputGroup({
-  className,
-  size,
-  ...props
-}: React.ComponentProps<'div'> & VariantProps<typeof inputGroupVariants>) {
+function InputGroup({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="input-group"
-      data-size={size}
       role="group"
-      className={cn(inputGroupVariants({ size }), className)}
+      className={cn(
+        'flex w-full min-w-0 items-center ring ring-input',
+        className,
+      )}
       {...props}
     />
   );
@@ -39,23 +26,12 @@ const inputGroupAddonVariants = cva('flex h-auto items-center select-none', {
     align: {
       'inline-end': 'order-last',
     },
-    size: {
-      lg: '',
-    },
   },
-  compoundVariants: [
-    {
-      align: 'inline-end',
-      size: 'lg',
-      className: 'pr-4 has-[button]:-mr-2 has-[kbd]:mr-1',
-    },
-  ],
 });
 
 function InputGroupAddon({
   className,
   align,
-  size,
   ...props
 }: React.ComponentProps<'div'> & VariantProps<typeof inputGroupAddonVariants>) {
   return (
@@ -63,7 +39,7 @@ function InputGroupAddon({
       role="group"
       data-slot="input-group-addon"
       data-align={align}
-      className={cn(inputGroupAddonVariants({ align, size }), className)}
+      className={cn(inputGroupAddonVariants({ align }), className)}
       onClick={(e) => {
         if ((e.target as HTMLElement).closest('button')) {
           return;
