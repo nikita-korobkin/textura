@@ -53,22 +53,18 @@ export function ConversationScrollButton({
     <AnimatePresence>
       {!isAtBottom && (
         <motion.div
-          className="absolute bottom-4 left-1/2"
           initial={{
             opacity: 0,
-            x: '-50%',
             y: shouldReduceMotion ? 0 : 10,
             scale: shouldReduceMotion ? 1 : 0.9,
           }}
           animate={{
             opacity: 1,
-            x: '-50%',
             y: 0,
             scale: shouldReduceMotion ? 1 : [0.9, 1.025, 1],
           }}
           exit={{
             opacity: 0,
-            x: '-50%',
             y: shouldReduceMotion ? 0 : 4,
             scale: shouldReduceMotion ? 1 : 0.96,
             transition: {
