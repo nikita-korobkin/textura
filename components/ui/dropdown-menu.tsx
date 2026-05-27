@@ -85,6 +85,7 @@ function DropdownMenuContent({
     <AnimatePresence>
       {open && (
         <MenuPrimitive.Portal>
+          <MenuPrimitive.Backdrop className="fixed inset-0 z-40 bg-transparent" />
           <MenuPrimitive.Positioner
             className="isolate z-50 outline-none"
             align={align}
