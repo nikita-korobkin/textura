@@ -22,7 +22,6 @@
     "@next/env": "^16.2.6",
     "@react-aria/focus": "3.21.5",
     "@tanstack/react-hotkeys": "^0.9.1",
-    "ai": "^6.0.184",
     "algoliasearch": "^5.52.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

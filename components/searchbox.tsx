@@ -5,10 +5,11 @@ import {
   type AutocompleteApi,
   type AutocompleteState,
 } from '@algolia/autocomplete-core';
-import type { ChatStatus } from 'ai';
 import type { Route } from 'next';
 import { useRouter } from 'next/navigation';
 import {
+  createContext,
+  use,
   useLayoutEffect,
   useRef,
   useState,
@@ -16,14 +17,17 @@ import {
   type ComponentProps,
   type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
+  type RefObject,
 } from 'react';
+import { SearchIcon } from 'lucide-react';
 
 import {
-  Composer,
-  ComposerAddon,
-  ComposerInput,
-  ComposerSubmit,
-} from '@/components/composer';
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from '@/components/ui/input-group';
+import { Spinner } from '@/components/ui/spinner';
 import { createDictionaryPlugin } from '@/lib/algolia/autocomplete/dictionary-plugin';
 import type { HeadwordRecord } from '@/lib/algolia/headwords';
 import { searchClient } from '@/lib/algolia/search-client';
@@ -38,6 +42,15 @@ type Autocomplete = AutocompleteApi<
   ReactKeyboardEvent
 >;
 
+type SearchBoxStatus = 'idle' | 'validating';
+
+type SearchBoxContextValue = {
+  autocomplete: Autocomplete;
+  autocompleteState: AutocompleteState<HeadwordRecord>;
+  inputRef: RefObject<HTMLInputElement | null>;
+  isValidating: boolean;
+};
+
 const initialAutocompleteState: AutocompleteState<HeadwordRecord> = {
   activeItemId: null,
   collections: [],
@@ -48,8 +61,20 @@ const initialAutocompleteState: AutocompleteState<HeadwordRecord> = {
   status: 'idle',
 };
 
+const SearchBoxContext = createContext<SearchBoxContextValue | null>(null);
+
 function isAbortError(error: unknown) {
   return error instanceof Error && error.name === 'AbortError';
+}
+
+function useSearchBox() {
+  const context = use(SearchBoxContext);
+
+  if (!context) {
+    throw new Error('useSearchBox must be used within SearchBox.');
+  }
+
+  return context;
 }
 
 function useAutocomplete() {
@@ -58,7 +83,7 @@ function useAutocomplete() {
   const abortRef = useRef<AbortController | null>(null);
   const shouldReset = useRef(false);
 
-  const [status, setStatus] = useState<ChatStatus>('ready');
+  const [status, setStatus] = useState<SearchBoxStatus>('idle');
   const [autocompleteState, setAutocompleteState] = useState(
     initialAutocompleteState,
   );
@@ -81,7 +106,7 @@ function useAutocomplete() {
 
     const controller = new AbortController();
     abortRef.current = controller;
-    setStatus('submitted');
+    setStatus('validating');
 
     try {
       const response = await fetch('/api/headwords/validate', {
@@ -117,7 +142,7 @@ function useAutocomplete() {
       }
 
       if (!shouldReset.current) {
-        setStatus('ready');
+        setStatus('idle');
       }
     }
   }
@@ -161,7 +186,7 @@ function useAutocomplete() {
 
       if (shouldReset.current) {
         shouldReset.current = false;
-        setStatus('ready');
+        setStatus('idle');
         autocomplete.setQuery('');
       }
     };
@@ -172,6 +197,48 @@ function useAutocomplete() {
     autocompleteState,
     status,
   };
+}
+
+function SearchBoxInput() {
+  const { autocomplete, autocompleteState, inputRef, isValidating } =
+    useSearchBox();
+
+  const hasQuery = autocompleteState.query.trim() !== '';
+
+  return (
+    <form
+      className="flex w-full flex-col gap-2"
+      {...autocomplete.getFormProps({
+        inputElement: null,
+      })}
+    >
+      <InputGroup className="h-14 rounded-2xl bg-card shadow-xs ring-border *:data-[slot=input-group-control]:pr-3 *:data-[slot=input-group-control]:pl-4">
+        <InputGroupInput
+          {...autocomplete.getInputProps({
+            inputElement: null,
+            type: 'text',
+            'aria-label': 'Dictionary search',
+            placeholder: 'Search Textura...',
+          })}
+          ref={inputRef}
+          autoComplete="off"
+          spellCheck={false}
+        />
+
+        <InputGroupAddon align="inline-end" className="pr-2">
+          <InputGroupButton
+            type="submit"
+            variant="default"
+            size="icon-lg"
+            className="rounded-lg"
+            disabled={!hasQuery || isValidating}
+          >
+            {isValidating ? <Spinner /> : <SearchIcon />}
+          </InputGroupButton>
+        </InputGroupAddon>
+      </InputGroup>
+    </form>
+  );
 }
 
 function SearchBoxPanel({ className, ...props }: ComponentProps<'div'>) {
@@ -188,7 +255,11 @@ function SearchBoxList({ ...props }: ComponentProps<'ul'>) {
   return <ul data-slot="searchbox-list" {...props} />;
 }
 
-function SearchBoxItem({ className, ...props }: ComponentProps<'li'>) {
+type SearchBoxItemProps = ComponentProps<'li'> & {
+  item: HeadwordRecord;
+};
+
+function SearchBoxItem({ item, className, ...props }: SearchBoxItemProps) {
   return (
     <li
       data-slot="searchbox-item"
@@ -198,7 +269,22 @@ function SearchBoxItem({ className, ...props }: ComponentProps<'li'>) {
         className,
       )}
       {...props}
-    />
+    >
+      <div className="flex items-center gap-2">
+        <span>{item.headword}</span>
+        {item.display.pronunciation && (
+          <span className="text-muted-foreground">
+            {item.display.pronunciation}
+          </span>
+        )}
+      </div>
+
+      {item.display.meaning && (
+        <div className="truncate text-sm text-muted-foreground">
+          {item.display.meaning}
+        </div>
+      )}
+    </li>
   );
 }
 
@@ -207,71 +293,49 @@ function SearchBox() {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const hasQuery = autocompleteState.query.trim() !== '';
-  const isSubmitted = status === 'submitted';
+  const isValidating = status === 'validating';
 
   useLayoutEffect(() => {
     inputRef.current?.focus();
   }, []);
 
   return (
-    <div {...autocomplete.getRootProps({ className: 'w-full' })}>
-      <Composer
-        {...autocomplete.getFormProps({
-          inputElement: null,
-        })}
-      >
-        <ComposerInput
-          {...autocomplete.getInputProps({
-            inputElement: null,
-            type: 'text',
-            'aria-label': 'Dictionary search',
-            placeholder: 'Search Textura...',
-          })}
-          ref={inputRef}
-        />
+    <SearchBoxContext.Provider
+      value={{
+        autocomplete,
+        autocompleteState,
+        inputRef,
+        isValidating,
+      }}
+    >
+      <div {...autocomplete.getRootProps({ className: 'w-full' })}>
+        <SearchBoxInput />
 
-        <ComposerAddon>
-          <ComposerSubmit disabled={!hasQuery || isSubmitted} status={status} />
-        </ComposerAddon>
-      </Composer>
-
-      {autocompleteState.isOpen && (
-        <SearchBoxPanel {...autocomplete.getPanelProps({})}>
-          {autocompleteState.collections.map(({ source, items }) =>
-            items.length > 0 ? (
-              <SearchBoxList
-                key={source.sourceId}
-                {...autocomplete.getListProps({ source })}
-              >
-                {items.map((item) => (
-                  <SearchBoxItem
-                    key={`${source.sourceId}:${item.objectID}`}
-                    {...autocomplete.getItemProps({
-                      item,
-                      source,
-                    })}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span>{item.headword}</span>
-                      <span className="text-muted-foreground">
-                        {item.display.pronunciation}
-                      </span>
-                    </div>
-
-                    {item.display?.meaning && (
-                      <div className="truncate text-sm text-muted-foreground">
-                        {item.display.meaning}
-                      </div>
-                    )}
-                  </SearchBoxItem>
-                ))}
-              </SearchBoxList>
-            ) : null,
-          )}
-        </SearchBoxPanel>
-      )}
-    </div>
+        {autocompleteState.isOpen && (
+          <SearchBoxPanel {...autocomplete.getPanelProps({})}>
+            {autocompleteState.collections.map(({ source, items }) =>
+              items.length > 0 ? (
+                <SearchBoxList
+                  key={source.sourceId}
+                  {...autocomplete.getListProps({ source })}
+                >
+                  {items.map((item) => (
+                    <SearchBoxItem
+                      key={`${source.sourceId}:${item.objectID}`}
+                      item={item}
+                      {...autocomplete.getItemProps({
+                        item,
+                        source,
+                      })}
+                    />
+                  ))}
+                </SearchBoxList>
+              ) : null,
+            )}
+          </SearchBoxPanel>
+        )}
+      </div>
+    </SearchBoxContext.Provider>
   );
 }
 
