@@ -1,8 +1,8 @@
 import '@/envConfig';
 import { algoliasearch } from 'algoliasearch';
+import { articleToHeadwordRecord } from '@/lib/algolia/headwords';
 import { drizzleDb } from '@/lib/db';
 import { articles } from '@/lib/db/schema';
-import { articleToHeadwordRecord } from '@/lib/search/headwords';
 
 const appId = process.env.ALGOLIA_APP_ID;
 const writeApiKey = process.env.ALGOLIA_WRITE_API_KEY;
@@ -45,7 +45,9 @@ async function main() {
     objects: records,
   });
 
-  console.log(`Reindexed ${records.length} headword records into ${indexName}.`);
+  console.log(
+    `Reindexed ${records.length} headword records into ${indexName}.`,
+  );
 }
 
 main().catch((error) => {

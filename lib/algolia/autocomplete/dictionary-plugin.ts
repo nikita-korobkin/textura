@@ -4,7 +4,7 @@ import {
   type SearchClient,
 } from '@algolia/autocomplete-preset-algolia';
 
-import type { HeadwordRecord } from '@/lib/search/headwords';
+import type { HeadwordRecord } from '@/lib/algolia/headwords';
 
 function createDictionaryPlugin({
   searchClient,

@@ -24,11 +24,11 @@ import {
   ComposerInput,
   ComposerSubmit,
 } from '@/components/composer';
+import { createDictionaryPlugin } from '@/lib/algolia/autocomplete/dictionary-plugin';
+import type { HeadwordRecord } from '@/lib/algolia/headwords';
+import { searchClient } from '@/lib/algolia/search-client';
 import { dictionaryPath } from '@/lib/dictionary/routes';
-import { createDictionaryPlugin } from '@/lib/omnibox/plugins/dictionary-plugin';
-import { searchClient } from '@/lib/omnibox/search-client';
 import { HeadwordSchema } from '@/lib/schemas';
-import type { HeadwordRecord } from '@/lib/search/headwords';
 import { cn } from '@/lib/utils';
 
 type Autocomplete = AutocompleteApi<
@@ -129,7 +129,7 @@ function useAutocomplete() {
       ReactMouseEvent,
       ReactKeyboardEvent
     >({
-      id: 'omnibox',
+      id: 'searchbox',
 
       plugins: [createDictionaryPlugin({ searchClient })],
 
@@ -174,24 +174,24 @@ function useAutocomplete() {
   };
 }
 
-function OmniboxPanel({ className, ...props }: ComponentProps<'div'>) {
+function SearchBoxPanel({ className, ...props }: ComponentProps<'div'>) {
   return (
     <div
-      data-slot="omnibox-panel"
+      data-slot="searchbox-panel"
       className={cn('mt-2', className)}
       {...props}
     />
   );
 }
 
-function OmniboxList({ ...props }: ComponentProps<'ul'>) {
-  return <ul data-slot="omnibox-list" {...props} />;
+function SearchBoxList({ ...props }: ComponentProps<'ul'>) {
+  return <ul data-slot="searchbox-list" {...props} />;
 }
 
-function OmniboxItem({ className, ...props }: ComponentProps<'li'>) {
+function SearchBoxItem({ className, ...props }: ComponentProps<'li'>) {
   return (
     <li
-      data-slot="omnibox-item"
+      data-slot="searchbox-item"
       className={cn(
         'rounded-lg px-3 py-2 text-sm select-none',
         'aria-selected:bg-accent',
@@ -202,7 +202,7 @@ function OmniboxItem({ className, ...props }: ComponentProps<'li'>) {
   );
 }
 
-function Omnibox() {
+function SearchBox() {
   const { autocomplete, autocompleteState, status } = useAutocomplete();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -225,8 +225,8 @@ function Omnibox() {
           {...autocomplete.getInputProps({
             inputElement: null,
             type: 'text',
-            'aria-label': 'Ask Textura',
-            placeholder: 'Ask Textura...',
+            'aria-label': 'Dictionary search',
+            placeholder: 'Search Textura...',
           })}
           ref={inputRef}
         />
@@ -237,15 +237,15 @@ function Omnibox() {
       </Composer>
 
       {autocompleteState.isOpen && (
-        <OmniboxPanel {...autocomplete.getPanelProps({})}>
+        <SearchBoxPanel {...autocomplete.getPanelProps({})}>
           {autocompleteState.collections.map(({ source, items }) =>
             items.length > 0 ? (
-              <OmniboxList
+              <SearchBoxList
                 key={source.sourceId}
                 {...autocomplete.getListProps({ source })}
               >
                 {items.map((item) => (
-                  <OmniboxItem
+                  <SearchBoxItem
                     key={`${source.sourceId}:${item.objectID}`}
                     {...autocomplete.getItemProps({
                       item,
@@ -264,15 +264,15 @@ function Omnibox() {
                         {item.display.meaning}
                       </div>
                     )}
-                  </OmniboxItem>
+                  </SearchBoxItem>
                 ))}
-              </OmniboxList>
+              </SearchBoxList>
             ) : null,
           )}
-        </OmniboxPanel>
+        </SearchBoxPanel>
       )}
     </div>
   );
 }
 
-export { Omnibox };
+export { SearchBox };

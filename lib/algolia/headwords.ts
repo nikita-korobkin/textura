@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { dictionaryPath } from '@/lib/dictionary/routes';
 import {
   ArticleSchema,
