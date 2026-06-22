@@ -5,6 +5,9 @@ import {
   type AutocompleteApi,
   type AutocompleteState,
 } from '@algolia/autocomplete-core';
+import { Field } from '@base-ui/react/field';
+import { Form } from '@base-ui/react/form';
+import { SearchIcon, XIcon } from 'lucide-react';
 import type { Route } from 'next';
 import { useRouter } from 'next/navigation';
 import {
@@ -19,7 +22,6 @@ import {
   type MouseEvent as ReactMouseEvent,
   type RefObject,
 } from 'react';
-import { SearchIcon } from 'lucide-react';
 
 import {
   InputGroup,
@@ -47,6 +49,7 @@ type SearchBoxStatus = 'idle' | 'validating';
 type SearchBoxContextValue = {
   autocomplete: Autocomplete;
   autocompleteState: AutocompleteState<HeadwordRecord>;
+  errors: Form.Props['errors'];
   inputRef: RefObject<HTMLInputElement | null>;
   isValidating: boolean;
 };
@@ -83,6 +86,7 @@ function useAutocomplete() {
   const abortRef = useRef<AbortController | null>(null);
   const shouldReset = useRef(false);
 
+  const [errors, setErrors] = useState<Form.Props['errors']>({});
   const [status, setStatus] = useState<SearchBoxStatus>('idle');
   const [autocompleteState, setAutocompleteState] = useState(
     initialAutocompleteState,
@@ -99,9 +103,11 @@ function useAutocomplete() {
     });
 
     if (!parsed.success) {
+      setErrors({ query: 'This query looks invalid' });
       return;
     }
 
+    setErrors({});
     abortRef.current?.abort();
 
     const controller = new AbortController();
@@ -118,7 +124,12 @@ function useAutocomplete() {
         signal: controller.signal,
       });
 
-      if (controller.signal.aborted || response.status === 422) {
+      if (controller.signal.aborted) {
+        return;
+      }
+
+      if (response.status === 422) {
+        setErrors({ query: 'This query looks invalid' });
         return;
       }
 
@@ -161,6 +172,7 @@ function useAutocomplete() {
       onStateChange({ state, prevState }) {
         if (prevState.query !== state.query) {
           abortRef.current?.abort();
+          setErrors({});
         }
 
         setAutocompleteState(state);
@@ -195,49 +207,69 @@ function useAutocomplete() {
   return {
     autocomplete,
     autocompleteState,
+    errors,
     status,
   };
 }
 
 function SearchBoxInput() {
-  const { autocomplete, autocompleteState, inputRef, isValidating } =
+  const { autocomplete, autocompleteState, errors, inputRef, isValidating } =
     useSearchBox();
 
   const hasQuery = autocompleteState.query.trim() !== '';
 
   return (
-    <form
-      className="flex w-full flex-col gap-2"
+    <Form
+      errors={errors}
       {...autocomplete.getFormProps({
         inputElement: null,
       })}
     >
-      <InputGroup className="h-14 rounded-2xl bg-card shadow-xs ring-border *:data-[slot=input-group-control]:pr-3 *:data-[slot=input-group-control]:pl-4">
-        <InputGroupInput
-          {...autocomplete.getInputProps({
-            inputElement: null,
-            type: 'text',
-            'aria-label': 'Dictionary search',
-            placeholder: 'Search Textura...',
-          })}
-          ref={inputRef}
-          autoComplete="off"
-          spellCheck={false}
-        />
+      <Field.Root name="query" className="flex w-full flex-col gap-2">
+        <InputGroup className="h-14 rounded-2xl bg-card shadow-xs ring-border *:data-[slot=input-group-control]:pr-3 *:data-[slot=input-group-control]:pl-4">
+          <InputGroupInput
+            {...autocomplete.getInputProps({
+              inputElement: null,
+              type: 'text',
+              'aria-label': 'Dictionary search',
+              placeholder: 'Search Textura...',
+            })}
+            ref={inputRef}
+            autoComplete="off"
+            spellCheck={false}
+          />
 
-        <InputGroupAddon align="inline-end" className="pr-2">
-          <InputGroupButton
-            type="submit"
-            variant="default"
-            size="icon-lg"
-            className="rounded-lg"
-            disabled={!hasQuery || isValidating}
-          >
-            {isValidating ? <Spinner /> : <SearchIcon />}
-          </InputGroupButton>
-        </InputGroupAddon>
-      </InputGroup>
-    </form>
+          <InputGroupAddon align="inline-end" className="pr-2">
+            <InputGroupButton
+              type="submit"
+              aria-label="Search"
+              variant="default"
+              size="icon-lg"
+              className="rounded-lg"
+              disabled={!hasQuery || isValidating}
+            >
+              {isValidating ? <Spinner /> : <SearchIcon />}
+            </InputGroupButton>
+          </InputGroupAddon>
+        </InputGroup>
+
+        <SearchBoxError />
+      </Field.Root>
+    </Form>
+  );
+}
+
+function SearchBoxError() {
+  return (
+    <Field.Error
+      render={({ children, ...props }) => (
+        <div {...props}>
+          <XIcon className="size-3 shrink-0 text-destructive" />
+          {children}
+        </div>
+      )}
+      className="ml-1 inline-flex w-fit items-center gap-1 rounded-lg bg-popover py-1.5 pr-2.5 pl-1.5 text-xs font-normal text-popover-foreground shadow-xs ring ring-border transition-[opacity,translate,scale] duration-150 ease-out will-change-[opacity,translate,scale] data-ending-style:-translate-y-0.5 data-ending-style:scale-[0.99] data-ending-style:opacity-0 data-starting-style:-translate-y-1 data-starting-style:scale-[0.98] data-starting-style:opacity-0"
+    />
   );
 }
 
@@ -289,7 +321,7 @@ function SearchBoxItem({ item, className, ...props }: SearchBoxItemProps) {
 }
 
 function SearchBox() {
-  const { autocomplete, autocompleteState, status } = useAutocomplete();
+  const { autocomplete, autocompleteState, errors, status } = useAutocomplete();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -304,6 +336,7 @@ function SearchBox() {
       value={{
         autocomplete,
         autocompleteState,
+        errors,
         inputRef,
         isValidating,
       }}
