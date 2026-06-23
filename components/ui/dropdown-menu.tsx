@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, use, useLayoutEffect, useState } from 'react';
+import { createContext, use, useLayoutEffect, useRef, useState } from 'react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { FocusScope } from '@react-aria/focus';
 import { AnimatePresence, motion } from 'motion/react';
@@ -31,11 +31,15 @@ function useDropdownMenu() {
 function DropdownMenu({
   children,
   ...props
-}: Omit<MenuPrimitive.Root.Props, 'open' | 'onOpenChange'>) {
+}: Omit<MenuPrimitive.Root.Props, 'open' | 'onOpenChange' | 'actionsRef'>) {
+  const actionsRef = useRef<MenuPrimitive.Root.Actions | null>(null);
   const [open, setOpen] = useState(false);
 
   useLayoutEffect(() => {
+    const actions = actionsRef.current;
+
     return () => {
+      actions?.unmount();
       setOpen(false);
     };
   }, []);
@@ -52,6 +56,7 @@ function DropdownMenu({
         data-slot="dropdown-menu"
         open={open}
         onOpenChange={setOpen}
+        actionsRef={actionsRef}
         {...props}
       >
         {children}

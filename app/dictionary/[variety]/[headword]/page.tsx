@@ -77,7 +77,7 @@ async function ArticleContent({
                   {lexeme.lexicalCategory}
                 </span>
                 <span className="ml-2 text-muted-foreground before:content-['/'] after:content-['/']">
-                  {lexeme.pronunciation}
+                  {lexeme.transcription}
                 </span>
               </h3>
               <ol className="mt-2 list-[bare-decimal] space-y-2 pl-[calc(1ch+0.5em)] marker:text-muted-foreground">

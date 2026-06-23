@@ -21,9 +21,14 @@ export const LexicalCategorySchema = z.enum([
 ]);
 export type LexicalCategory = z.infer<typeof LexicalCategorySchema>;
 
+export const TranscriptionSchema = z
+  .string()
+  .describe('IPA transcription without slashes');
+export type Transcription = z.infer<typeof TranscriptionSchema>;
+
 export const LexemeSchema = z.object({
   lexicalCategory: LexicalCategorySchema,
-  pronunciation: z.string().describe('IPA transcription without slashes'),
+  transcription: TranscriptionSchema,
   senses: z.array(SenseSchema),
 });
 export type Lexeme = z.infer<typeof LexemeSchema>;

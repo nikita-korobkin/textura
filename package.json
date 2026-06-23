@@ -2,7 +2,7 @@
   "name": "textura",
   "version": "0.0.0",
   "private": true,
-  "packageManager": "pnpm@10.33.2",
+  "packageManager": "pnpm@11.4.0",
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build",
@@ -10,17 +10,19 @@
     "lint": "eslint",
     "format": "prettier --write .",
     "oai:schema": "tsx scripts/oai-schema.ts",
+    "algolia:reindex:headwords": "tsx scripts/reindex-headwords.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^3.0.64",
-    "@ai-sdk/react": "^3.0.186",
-    "@base-ui/react": "^1.5.0",
+    "@algolia/autocomplete-core": "^1.19.8",
+    "@algolia/autocomplete-preset-algolia": "^1.19.8",
+    "@base-ui/react": "^1.6.0",
     "@neondatabase/serverless": "^1.0.2",
+    "@next/env": "^16.2.6",
     "@react-aria/focus": "3.21.5",
     "@tanstack/react-hotkeys": "^0.9.1",
-    "ai": "^6.0.184",
+    "algoliasearch": "^5.52.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.1",
@@ -32,9 +34,7 @@
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "server-only": "^0.0.1",
-    "streamdown": "^2.5.0",
     "tailwind-merge": "^3.5.0",
-    "use-stick-to-bottom": "^1.1.4",
     "zod": "^4.3.6"
   },
   "devDependencies": {
@@ -52,13 +52,8 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "shadcn": "^3.8.5",
     "tailwindcss": "^4.3.0",
+    "tsx": "^4.22.3",
     "tw-animate-css": "^1.4.0",
     "typescript": "^5.9.3"
-  },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.2.14",
-      "@types/react-dom": "19.2.3"
-    }
   }
 }

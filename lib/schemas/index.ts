@@ -1,10 +1,12 @@
 export {
   SenseSchema,
   LexicalCategorySchema,
+  TranscriptionSchema,
   LexemeSchema,
   EtymonSchema,
   type Sense,
   type LexicalCategory,
+  type Transcription,
   type Lexeme,
   type Etymon,
 } from './etymon';
