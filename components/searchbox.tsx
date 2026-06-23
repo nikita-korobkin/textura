@@ -268,7 +268,7 @@ function SearchBoxError() {
           {children}
         </div>
       )}
-      className="ml-1 inline-flex w-fit items-center gap-1 rounded-lg bg-popover py-1.5 pr-2.5 pl-1.5 text-xs font-normal text-popover-foreground shadow-xs ring ring-border transition-[opacity,translate,scale] duration-150 ease-out will-change-[opacity,translate,scale] data-ending-style:-translate-y-0.5 data-ending-style:scale-[0.99] data-ending-style:opacity-0 data-starting-style:-translate-y-1 data-starting-style:scale-[0.98] data-starting-style:opacity-0"
+      className="ml-1 inline-flex w-fit items-center gap-1 rounded-lg bg-popover py-1.5 pr-2.5 pl-1.5 text-xs font-normal text-popover-foreground shadow-xs ring ring-border transition-[opacity,translate,scale] duration-150 ease-out will-change-[opacity,translate,scale] data-starting-style:-translate-y-1 data-starting-style:scale-[0.98] data-starting-style:opacity-0"
     />
   );
 }
