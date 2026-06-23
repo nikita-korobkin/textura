@@ -15,7 +15,7 @@ function createDictionaryPlugin({
     name: 'textura.dictionaryPlugin',
 
     getSources({ query }) {
-      if (query.trim() === '') {
+      if (!/[\p{L}\p{N}]/u.test(query)) {
         return [];
       }
 
