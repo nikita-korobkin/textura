@@ -33,7 +33,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { createDictionaryPlugin } from '@/lib/algolia/autocomplete/dictionary-plugin';
 import type { HeadwordRecord } from '@/lib/algolia/headwords';
 import { searchClient } from '@/lib/algolia/search-client';
-import { dictionaryPath } from '@/lib/dictionary/routes';
 import { HeadwordSchema } from '@/lib/schemas';
 import { cn } from '@/lib/utils';
 
@@ -140,7 +139,9 @@ function useAutocomplete() {
       }
 
       shouldReset.current = true;
-      router.push(dictionaryPath(parsed.data) as Route);
+      router.push(
+        `/dictionary/en-us/${encodeURIComponent(parsed.data.form)}` as Route,
+      );
     } catch (error) {
       if (isAbortError(error)) {
         return;

@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
-import { dictionaryPath } from '@/lib/dictionary/routes';
 import {
   ArticleSchema,
   HeadwordSchema,
   LexicalCategorySchema,
   TranscriptionSchema,
   VarietySchema,
+  slugToVariety,
   type Article,
   type Headword,
 } from '@/lib/schemas';
@@ -58,7 +58,7 @@ export function articleToHeadwordRecord(article: Article): HeadwordRecord {
     objectID: headwordObjectID(headword),
     headword: headword.form,
     variety: headword.variety,
-    url: dictionaryPath(headword),
+    url: `/dictionary/${slugToVariety.encode(headword.variety)}/${encodeURIComponent(headword.form)}`,
     hasArticle: true,
     display: getArticleDisplay(parsedArticle),
   });
