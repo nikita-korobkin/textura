@@ -41,10 +41,8 @@ function ArticleEmpty() {
   return (
     <Empty className="animate-in py-24 duration-200 fade-in">
       <EmptyHeader>
-        <EmptyTitle>No entry found</EmptyTitle>
-        <EmptyDescription>
-          Try another spelling or search for a different word.
-        </EmptyDescription>
+        <EmptyTitle>No article found</EmptyTitle>
+        <EmptyDescription>Try searching for something else.</EmptyDescription>
       </EmptyHeader>
     </Empty>
   );
