@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { generateArticle } from '@/lib/articles';
-import { isHeadwordSupported } from '@/lib/headwords';
+import { SupportedHeadwordSchema } from '@/lib/headwords';
 import {
   Empty,
   EmptyDescription,
@@ -10,7 +10,7 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty';
 import { Skeleton } from '@/components/ui/skeleton';
-import { HeadwordSchema, slugToVariety } from '@/lib/schemas';
+import { slugToVariety } from '@/lib/schemas';
 
 export async function generateMetadata({
   params,
@@ -60,15 +60,11 @@ async function ArticleContent({
   const parsedVariety = slugToVariety.safeParse(variety);
   if (!parsedVariety.success) notFound();
 
-  const parsedHeadword = HeadwordSchema.safeParse({
+  const parsedHeadword = await SupportedHeadwordSchema.safeParseAsync({
     form: decodeURIComponent(headword),
     variety: parsedVariety.data,
   });
   if (!parsedHeadword.success) return <ArticleEmpty />;
-
-  if (!(await isHeadwordSupported(parsedHeadword.data))) {
-    return <ArticleEmpty />;
-  }
 
   const article = await generateArticle(parsedHeadword.data);
   if (!article) return <ArticleEmpty />;

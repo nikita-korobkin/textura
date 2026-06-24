@@ -1,14 +1,19 @@
 import 'server-only';
 
 import OpenAI from 'openai';
+import { z } from 'zod';
 import { zodTextFormat } from 'openai/helpers/zod';
 import { cacheLife } from 'next/cache';
 import { findArticle } from './articles';
-import { HeadwordSupportSchema, type Headword } from './schemas';
+import {
+  HeadwordSchema,
+  HeadwordSupportSchema,
+  type Headword,
+} from './schemas';
 
 const client = new OpenAI();
 
-export async function isHeadwordSupported(headword: Headword) {
+async function checkHeadwordSupport(headword: Headword) {
   'use cache';
   cacheLife('max');
 
@@ -31,3 +36,14 @@ export async function isHeadwordSupported(headword: Headword) {
 
   return response.output_parsed?.valid === true;
 }
+
+export const SupportedHeadwordSchema = HeadwordSchema.refine(
+  checkHeadwordSupport,
+  {
+    when(payload) {
+      return HeadwordSchema.safeParse(payload.value).success;
+    },
+  },
+).brand<'SupportedHeadword'>();
+
+export type SupportedHeadword = z.infer<typeof SupportedHeadwordSchema>;
