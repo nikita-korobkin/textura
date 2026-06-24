@@ -2,6 +2,13 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { generateArticle } from '@/lib/articles';
+import { isHeadwordSupported } from '@/lib/headwords';
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from '@/components/ui/empty';
 import { Skeleton } from '@/components/ui/skeleton';
 import { HeadwordSchema, slugToVariety } from '@/lib/schemas';
 
@@ -30,6 +37,19 @@ function ArticleSkeleton() {
   );
 }
 
+function ArticleEmpty() {
+  return (
+    <Empty className="animate-in py-24 duration-200 fade-in">
+      <EmptyHeader>
+        <EmptyTitle>No entry found</EmptyTitle>
+        <EmptyDescription>
+          Try another spelling or search for a different word.
+        </EmptyDescription>
+      </EmptyHeader>
+    </Empty>
+  );
+}
+
 async function ArticleContent({
   params,
 }: {
@@ -44,10 +64,14 @@ async function ArticleContent({
     form: decodeURIComponent(headword),
     variety: parsedVariety.data,
   });
-  if (!parsedHeadword.success) notFound();
+  if (!parsedHeadword.success) return <ArticleEmpty />;
+
+  if (!(await isHeadwordSupported(parsedHeadword.data))) {
+    return <ArticleEmpty />;
+  }
 
   const article = await generateArticle(parsedHeadword.data);
-  if (!article) notFound();
+  if (!article) return <ArticleEmpty />;
 
   const showSuperscript = article.etymons.length > 1;
 
