@@ -214,6 +214,33 @@
   suffix: '\2002'; /* en space */
 }
 
+::view-transition-old(.article-skeleton-exit) {
+  animation: article-skeleton-out 120ms ease-out both;
+}
+
+::view-transition-new(.article-content-enter) {
+  animation: article-content-in 180ms ease-out both;
+}
+
+@keyframes article-skeleton-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes article-content-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(.article-skeleton-exit),
+  ::view-transition-new(.article-content-enter) {
+    animation: none;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-offset-1 outline-ring focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-ring aria-invalid:outline-2;

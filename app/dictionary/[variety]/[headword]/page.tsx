@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
+import { Suspense, ViewTransition } from 'react';
 import { notFound } from 'next/navigation';
 import { generateArticle } from '@/lib/articles';
 import { SupportedHeadwordSchema } from '@/lib/headwords';
@@ -125,8 +125,16 @@ export default function ArticlePage({
   params: Promise<{ headword: string; variety: string }>;
 }) {
   return (
-    <Suspense fallback={<ArticleSkeleton />}>
-      <Article params={params} />
+    <Suspense
+      fallback={
+        <ViewTransition exit="article-skeleton-exit">
+          <ArticleSkeleton />
+        </ViewTransition>
+      }
+    >
+      <ViewTransition enter="article-content-enter" default="none">
+        <Article params={params} />
+      </ViewTransition>
     </Suspense>
   );
 }
