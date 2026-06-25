@@ -26,7 +26,7 @@ export async function generateMetadata({
 
 function ArticleSkeleton() {
   return (
-    <div className="space-y-4">
+    <div className="mx-auto max-w-2xl space-y-4 px-4 py-26">
       <Skeleton className="h-12 w-48" />
       <Skeleton className="h-5 w-32" />
       <div className="space-y-2">
@@ -39,7 +39,7 @@ function ArticleSkeleton() {
 
 function ArticleEmpty() {
   return (
-    <Empty className="animate-in py-24 duration-200 fade-in">
+    <Empty className="h-full px-4">
       <EmptyHeader>
         <EmptyTitle>No article found</EmptyTitle>
         <EmptyDescription>Try searching for something else.</EmptyDescription>
@@ -48,7 +48,7 @@ function ArticleEmpty() {
   );
 }
 
-async function ArticleContent({
+async function Article({
   params,
 }: {
   params: Promise<{ headword: string; variety: string }>;
@@ -70,7 +70,7 @@ async function ArticleContent({
   const showSuperscript = article.etymons.length > 1;
 
   return (
-    <div className="animate-in duration-200 fade-in">
+    <article className="mx-auto max-w-2xl px-4 py-26">
       <h1 className="sr-only">{article.headword}</h1>
       {article.etymons.map((etymon, etymonIndex) => (
         <section key={etymonIndex} className={etymonIndex > 0 ? 'mt-12' : ''}>
@@ -115,7 +115,7 @@ async function ArticleContent({
           ))}
         </section>
       ))}
-    </div>
+    </article>
   );
 }
 
@@ -125,10 +125,8 @@ export default function ArticlePage({
   params: Promise<{ headword: string; variety: string }>;
 }) {
   return (
-    <article className="mx-auto max-w-2xl px-4 py-26">
-      <Suspense fallback={<ArticleSkeleton />}>
-        <ArticleContent params={params} />
-      </Suspense>
-    </article>
+    <Suspense fallback={<ArticleSkeleton />}>
+      <Article params={params} />
+    </Suspense>
   );
 }
