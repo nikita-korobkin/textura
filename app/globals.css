@@ -214,29 +214,29 @@
   suffix: '\2002'; /* en space */
 }
 
-::view-transition-old(.article-skeleton-exit) {
-  animation: article-skeleton-out 120ms ease-out both;
+::view-transition-old(.skeleton-reveal-exit) {
+  animation: 150ms ease-out both skeleton-reveal-fade reverse;
 }
 
-::view-transition-new(.article-content-enter) {
-  animation: article-content-in 180ms ease-out both;
+::view-transition-new(.skeleton-reveal-enter) {
+  animation: 200ms ease-in 150ms both skeleton-reveal-fade;
 }
 
-@keyframes article-skeleton-out {
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes article-content-in {
+@keyframes skeleton-reveal-fade {
   from {
     opacity: 0;
+    filter: blur(2px);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(.article-skeleton-exit),
-  ::view-transition-new(.article-content-enter) {
+  ::view-transition-old(.skeleton-reveal-exit),
+  ::view-transition-new(.skeleton-reveal-enter) {
     animation: none;
   }
 }

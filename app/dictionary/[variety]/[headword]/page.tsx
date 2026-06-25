@@ -127,12 +127,12 @@ export default function ArticlePage({
   return (
     <Suspense
       fallback={
-        <ViewTransition exit="article-skeleton-exit">
+        <ViewTransition exit="skeleton-reveal-exit">
           <ArticleSkeleton />
         </ViewTransition>
       }
     >
-      <ViewTransition enter="article-content-enter" default="none">
+      <ViewTransition enter="skeleton-reveal-enter" default="none">
         <Article params={params} />
       </ViewTransition>
     </Suspense>
