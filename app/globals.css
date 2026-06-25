@@ -214,6 +214,10 @@
   suffix: '\2002'; /* en space */
 }
 
+:root {
+  view-transition-name: none;
+}
+
 ::view-transition-old(.skeleton-reveal-exit) {
   animation: 150ms ease-out both skeleton-reveal-fade reverse;
 }
