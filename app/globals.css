@@ -214,6 +214,37 @@
   suffix: '\2002'; /* en space */
 }
 
+:root {
+  view-transition-name: none;
+}
+
+::view-transition-old(.skeleton-reveal-exit) {
+  animation: 150ms ease-out both skeleton-reveal-fade reverse;
+}
+
+::view-transition-new(.skeleton-reveal-enter) {
+  animation: 200ms ease-in 150ms both skeleton-reveal-fade;
+}
+
+@keyframes skeleton-reveal-fade {
+  from {
+    opacity: 0;
+    filter: blur(2px);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(.skeleton-reveal-exit),
+  ::view-transition-new(.skeleton-reveal-enter) {
+    animation: none;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-offset-1 outline-ring focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-ring aria-invalid:outline-2;

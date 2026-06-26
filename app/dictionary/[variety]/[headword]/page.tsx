@@ -1,9 +1,16 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
+import { Suspense, ViewTransition } from 'react';
 import { notFound } from 'next/navigation';
 import { generateArticle } from '@/lib/articles';
+import { SupportedHeadwordSchema } from '@/lib/headwords';
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from '@/components/ui/empty';
 import { Skeleton } from '@/components/ui/skeleton';
-import { HeadwordSchema, slugToVariety } from '@/lib/schemas';
+import { slugToVariety } from '@/lib/schemas';
 
 export async function generateMetadata({
   params,
@@ -19,7 +26,7 @@ export async function generateMetadata({
 
 function ArticleSkeleton() {
   return (
-    <div className="space-y-4">
+    <div className="mx-auto max-w-2xl space-y-4 px-4 py-26">
       <Skeleton className="h-12 w-48" />
       <Skeleton className="h-5 w-32" />
       <div className="space-y-2">
@@ -30,7 +37,18 @@ function ArticleSkeleton() {
   );
 }
 
-async function ArticleContent({
+function ArticleEmpty() {
+  return (
+    <Empty className="h-full px-4">
+      <EmptyHeader>
+        <EmptyTitle>No article found</EmptyTitle>
+        <EmptyDescription>Try searching for something else.</EmptyDescription>
+      </EmptyHeader>
+    </Empty>
+  );
+}
+
+async function Article({
   params,
 }: {
   params: Promise<{ headword: string; variety: string }>;
@@ -40,19 +58,19 @@ async function ArticleContent({
   const parsedVariety = slugToVariety.safeParse(variety);
   if (!parsedVariety.success) notFound();
 
-  const parsedHeadword = HeadwordSchema.safeParse({
+  const parsedHeadword = await SupportedHeadwordSchema.safeParseAsync({
     form: decodeURIComponent(headword),
     variety: parsedVariety.data,
   });
-  if (!parsedHeadword.success) notFound();
+  if (!parsedHeadword.success) return <ArticleEmpty />;
 
   const article = await generateArticle(parsedHeadword.data);
-  if (!article) notFound();
+  if (!article) return <ArticleEmpty />;
 
   const showSuperscript = article.etymons.length > 1;
 
   return (
-    <div className="animate-in duration-200 fade-in">
+    <article className="mx-auto max-w-2xl px-4 py-26">
       <h1 className="sr-only">{article.headword}</h1>
       {article.etymons.map((etymon, etymonIndex) => (
         <section key={etymonIndex} className={etymonIndex > 0 ? 'mt-12' : ''}>
@@ -97,7 +115,7 @@ async function ArticleContent({
           ))}
         </section>
       ))}
-    </div>
+    </article>
   );
 }
 
@@ -107,10 +125,16 @@ export default function ArticlePage({
   params: Promise<{ headword: string; variety: string }>;
 }) {
   return (
-    <article className="mx-auto max-w-2xl px-4 py-26">
-      <Suspense fallback={<ArticleSkeleton />}>
-        <ArticleContent params={params} />
-      </Suspense>
-    </article>
+    <Suspense
+      fallback={
+        <ViewTransition exit="skeleton-reveal-exit">
+          <ArticleSkeleton />
+        </ViewTransition>
+      }
+    >
+      <ViewTransition enter="skeleton-reveal-enter" default="none">
+        <Article params={params} />
+      </ViewTransition>
+    </Suspense>
   );
 }
