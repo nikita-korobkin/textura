@@ -70,8 +70,6 @@ function useSearchBox() {
 function useAutocomplete() {
   const router = useRouter();
 
-  const shouldReset = useRef(false);
-
   const [autocompleteState, setAutocompleteState] = useState(
     initialAutocompleteState,
   );
@@ -85,7 +83,6 @@ function useAutocomplete() {
 
     if (!query) return;
 
-    shouldReset.current = true;
     router.push(`/dictionary/en-us/${encodeURIComponent(query)}` as Route);
   }
 
@@ -110,7 +107,6 @@ function useAutocomplete() {
 
       navigator: {
         navigate({ itemUrl }) {
-          shouldReset.current = true;
           router.push(itemUrl as Route);
         },
       },
@@ -119,10 +115,7 @@ function useAutocomplete() {
 
   useLayoutEffect(() => {
     return () => {
-      if (shouldReset.current) {
-        shouldReset.current = false;
-        autocomplete.setQuery('');
-      }
+      autocomplete.setQuery('');
     };
   }, [autocomplete]);
 
