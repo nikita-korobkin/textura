@@ -18,7 +18,7 @@ const inter = localFont({
     },
   ],
   variable: '--font-inter',
-  display: 'optional',
+  display: 'block',
 });
 
 const sourceSerif = localFont({
