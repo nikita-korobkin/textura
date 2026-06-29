@@ -1,14 +1,25 @@
 import type { Metadata } from 'next';
-import { Inter, Source_Serif_4 } from 'next/font/google';
+import { Source_Serif_4 } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 
 import { ThemeProvider } from '@/components/theme-provider';
 
-const inter = Inter({
+const inter = localFont({
+  src: [
+    {
+      path: './fonts/InterVariable.woff2',
+      weight: '100 900',
+      style: 'normal',
+    },
+    {
+      path: './fonts/InterVariable-Italic.woff2',
+      weight: '100 900',
+      style: 'italic',
+    },
+  ],
   variable: '--font-inter',
-  subsets: ['latin'],
-  display: 'block',
-  style: ['normal', 'italic'],
+  display: 'optional',
 });
 
 const sourceSerif = Source_Serif_4({
