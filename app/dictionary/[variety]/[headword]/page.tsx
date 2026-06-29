@@ -74,7 +74,7 @@ async function Article({
       <h1 className="sr-only">{article.headword}</h1>
       {article.etymons.map((etymon, etymonIndex) => (
         <section key={etymonIndex} className={etymonIndex > 0 ? 'mt-12' : ''}>
-          <h2 className="font-serif text-5xl font-semibold tracking-tight">
+          <h2 className="font-serif text-5xl font-semibold tracking-tight [font-variation-settings:'opsz'_16]">
             {article.headword}
             {showSuperscript && (
               <sup className="text-subtle-foreground select-none">
