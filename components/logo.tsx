@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 const logoVariants = cva(
-  'font-serif leading-none font-black tracking-tight text-foreground select-none dark:text-subtle-foreground',
+  "font-serif leading-none font-black tracking-tight text-foreground select-none [font-variation-settings:'opsz'_16] dark:text-subtle-foreground",
   {
     variants: {
       variant: {

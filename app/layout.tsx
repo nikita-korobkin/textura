@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Source_Serif_4 } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
 
@@ -8,12 +7,12 @@ import { ThemeProvider } from '@/components/theme-provider';
 const inter = localFont({
   src: [
     {
-      path: './fonts/InterVariable.woff2',
+      path: './fonts/inter/InterVariable.woff2',
       weight: '100 900',
       style: 'normal',
     },
     {
-      path: './fonts/InterVariable-Italic.woff2',
+      path: './fonts/inter/InterVariable-Italic.woff2',
       weight: '100 900',
       style: 'italic',
     },
@@ -22,12 +21,21 @@ const inter = localFont({
   display: 'optional',
 });
 
-const sourceSerif = Source_Serif_4({
+const sourceSerif = localFont({
+  src: [
+    {
+      path: './fonts/source-serif/SourceSerif4Variable-Roman.ttf.woff2',
+      weight: '200 900',
+      style: 'normal',
+    },
+    {
+      path: './fonts/source-serif/SourceSerif4Variable-Italic.ttf.woff2',
+      weight: '200 900',
+      style: 'italic',
+    },
+  ],
   variable: '--font-source-serif',
-  subsets: ['latin'],
   display: 'block',
-  preload: true,
-  style: ['normal', 'italic'],
 });
 
 export const metadata: Metadata = {
