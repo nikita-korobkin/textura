@@ -1,5 +1,5 @@
 import { Sidebar } from '@/components/ui/sidebar';
 
 export function AppSidebar() {
-  return <Sidebar variant="inset" />;
+  return <Sidebar />;
 }
