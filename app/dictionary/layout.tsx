@@ -3,5 +3,5 @@ export default function DictionaryLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <main className="h-dvh overflow-y-auto">{children}</main>;
+  return <div className="flex-1 overflow-y-auto">{children}</div>;
 }

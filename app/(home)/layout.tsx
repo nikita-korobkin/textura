@@ -4,8 +4,8 @@ export default function HomeLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="flex h-dvh items-start justify-center px-4 pt-[25vh]">
+    <div className="flex flex-1 items-start justify-center px-4 pt-[25vh]">
       {children}
-    </main>
+    </div>
   );
 }
