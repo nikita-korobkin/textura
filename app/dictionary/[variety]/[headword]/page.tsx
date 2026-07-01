@@ -26,7 +26,7 @@ export async function generateMetadata({
 
 function ArticleSkeleton() {
   return (
-    <div className="mx-auto max-w-2xl space-y-4 px-4 py-26">
+    <div className="space-y-4">
       <Skeleton className="h-12 w-48" />
       <Skeleton className="h-5 w-32" />
       <div className="space-y-2">
@@ -70,7 +70,7 @@ async function Article({
   const showSuperscript = article.etymons.length > 1;
 
   return (
-    <article className="mx-auto max-w-2xl px-4 py-26">
+    <article>
       <h1 className="sr-only">{article.headword}</h1>
       {article.etymons.map((etymon, etymonIndex) => (
         <section key={etymonIndex} className={etymonIndex > 0 ? 'mt-12' : ''}>
