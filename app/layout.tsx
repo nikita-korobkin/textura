@@ -4,7 +4,7 @@ import './globals.css';
 
 import { AppSidebar } from '@/components/app-sidebar';
 import { ThemeProvider } from '@/components/theme-provider';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 
 const inter = localFont({
   src: [
@@ -61,7 +61,7 @@ export default function RootLayout({
         >
           <SidebarProvider>
             <AppSidebar />
-            <SidebarInset>{children}</SidebarInset>
+            <main className="flex-1">{children}</main>
           </SidebarProvider>
         </ThemeProvider>
       </body>
