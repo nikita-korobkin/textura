@@ -1,15 +1,30 @@
+import Link from 'next/link';
+import { Logo } from '@/components/logo';
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { Logo } from '@/components/logo';
 
 export function AppSidebar() {
   return (
     <Sidebar>
-      <SidebarHeader className="h-13 pl-4">
-        <Logo variant="nav" />
+      <SidebarHeader>
+        <SidebarMenu className="flex-row items-center">
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              render={
+                <Link href="/" aria-label="Home">
+                  <Logo variant="nav" />
+                </Link>
+              }
+              className="h-9 hover:bg-transparent active:bg-transparent"
+            />
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
 
       <SidebarContent />
