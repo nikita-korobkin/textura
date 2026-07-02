@@ -63,6 +63,15 @@
   --selection: --alpha(var(--brand-9) / 30%);
   --selection-foreground: var(--foreground);
 
+  --sidebar: var(--background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--separator);
+  --sidebar-ring: var(--ring);
+
   --shadow-xs:
     0px 1px 2px 0px --alpha(var(--gray-12) / 6%),
     0px 2px 8px 0px --alpha(var(--gray-12) / 4%);
@@ -196,6 +205,15 @@
   --color-separator: var(--separator);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 
   --shadow-xs: var(--shadow-xs);
   --shadow-md: var(--shadow-md);
