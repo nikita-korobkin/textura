@@ -155,7 +155,6 @@ function SearchBoxInput() {
             aria-label="Search"
             variant="default"
             size="icon-lg"
-            className="rounded-lg"
             disabled={!hasQuery}
           >
             <SearchIcon />
